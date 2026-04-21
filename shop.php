@@ -6,6 +6,14 @@
 
 require_once 'includes/config.php';
 
+// Avvia sessione se non già attiva
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Verifica se l'utente è loggato
+$is_logged_in = isset($_SESSION['user_id']);
+
 // Recupera il parametro categoria dalla URL
 $category_slug = $_GET['category'] ?? '';
 $category_name = 'Tutti i Prodotti';
@@ -80,6 +88,16 @@ require_once 'includes/header.php';
                     <?php endforeach; ?>
                 </ul>
             </div>
+            
+            <!-- Messaggio per utenti non loggati -->
+            <?php if (!$is_logged_in): ?>
+            <div class="sidebar-widget login-reminder">
+                <h3 class="widget-title">🔐 Accedi per Acquistare</h3>
+                <p style="margin-bottom: 1rem;">Registrati o accedi per aggiungere prodotti al carrello e completare l'ordine.</p>
+                <a href="admin/login.php" class="btn btn-primary btn-sm" style="width:100%;">Accedi</a>
+                <a href="admin/register.php" class="btn btn-outline btn-sm" style="width:100%; margin-top:0.5rem;">Registrati</a>
+            </div>
+            <?php endif; ?>
         </aside>
 
         <!-- Griglia Prodotti -->
@@ -112,12 +130,24 @@ require_once 'includes/header.php';
                                 <p class="product-price">€<?php echo number_format($product['price'], 2); ?></p>
                                 <div class="product-actions">
                                     <a href="product.php?id=<?php echo $product['id']; ?>" class="btn btn-outline btn-sm">Dettagli</a>
-                                    <button class="btn btn-primary btn-sm add-to-cart" 
-                                            data-id="<?php echo $product['id']; ?>"
-                                            data-name="<?php echo htmlspecialchars($product['name']); ?>"
-                                            data-price="<?php echo $product['price']; ?>">
-                                        🛒 Aggiungi
-                                    </button>
+                                    
+                                    <?php if ($is_logged_in): ?>
+                                        <!-- Utente loggato: pulsante attivo -->
+                                        <button class="btn btn-primary btn-sm add-to-cart" 
+                                                data-id="<?php echo $product['id']; ?>"
+                                                data-name="<?php echo htmlspecialchars($product['name']); ?>"
+                                                data-price="<?php echo $product['price']; ?>">
+                                            🛒 Aggiungi
+                                        </button>
+                                    <?php else: ?>
+                                        <!-- Utente NON loggato: pulsante disabilitato che reindirizza al login -->
+                                        <button class="btn btn-primary btn-sm" 
+                                                onclick="window.location.href='admin/login.php'"
+                                                style="opacity: 0.7; cursor: pointer;"
+                                                title="Accedi per acquistare">
+                                            🔒 Accedi
+                                        </button>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </article>
@@ -129,7 +159,7 @@ require_once 'includes/header.php';
 </section>
 
 <script>
-// Funzione per aggiungere al carrello (usando LocalStorage)
+// Funzione per aggiungere al carrello (solo se loggato)
 document.querySelectorAll('.add-to-cart').forEach(button => {
     button.addEventListener('click', function() {
         const id = this.dataset.id;
@@ -154,7 +184,7 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
         this.textContent = '✅ Aggiunto!';
         setTimeout(() => { this.textContent = '🛒 Aggiungi'; }, 1000);
         
-        // Aggiorna contatore carrello (se presente)
+        // Aggiorna contatore carrello
         updateCartCount();
     });
 });
