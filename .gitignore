@@ -1,0 +1,27 @@
+# File di configurazione con password
+# includes/config.php (opzionale, se vuoi tenerlo privato)
+
+# File di log
+logs/*.log
+!logs/.gitkeep
+
+# File temporanei
+*.tmp
+*.swp
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# File caricati dagli utenti
+assets/images/*.jpg
+assets/images/*.jpeg
+assets/images/*.png
+assets/images/*.webp
+!assets/images/.gitkeep
+
+# Database
+*.sql
+!database.sql
