@@ -6,6 +6,14 @@
 
 require_once 'includes/config.php';
 
+// Avvia sessione se non già attiva
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Verifica se l'utente è loggato
+$is_logged_in = isset($_SESSION['user_id']);
+
 // Verifica che sia stato passato un ID
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     header('Location: shop.php');
@@ -86,16 +94,28 @@ require_once 'includes/header.php';
             </div>
             
             <div class="product-detail-actions">
-                <label for="quantity">Quantità:</label>
-                <input type="number" id="quantity" name="quantity" value="1" min="1" max="<?php echo $product['stock']; ?>" class="quantity-input">
-                
-                <button class="btn btn-primary btn-large add-to-cart-detail" 
-                        data-id="<?php echo $product['id']; ?>"
-                        data-name="<?php echo htmlspecialchars($product['name']); ?>"
-                        data-price="<?php echo $product['price']; ?>"
-                        <?php echo $product['stock'] <= 0 ? 'disabled' : ''; ?>>
-                    🛒 Aggiungi al Carrello
-                </button>
+                <?php if ($is_logged_in): ?>
+                    <!-- Utente loggato: può acquistare -->
+                    <label for="quantity">Quantità:</label>
+                    <input type="number" id="quantity" name="quantity" value="1" min="1" max="<?php echo $product['stock']; ?>" class="quantity-input">
+                    
+                    <button class="btn btn-primary btn-large add-to-cart-detail" 
+                            data-id="<?php echo $product['id']; ?>"
+                            data-name="<?php echo htmlspecialchars($product['name']); ?>"
+                            data-price="<?php echo $product['price']; ?>"
+                            <?php echo $product['stock'] <= 0 ? 'disabled' : ''; ?>>
+                        🛒 Aggiungi al Carrello
+                    </button>
+                <?php else: ?>
+                    <!-- Utente NON loggato: messaggio e link login -->
+                    <div class="login-prompt">
+                        <p>🔐 <strong>Accedi o registrati</strong> per aggiungere prodotti al carrello e completare l'acquisto.</p>
+                        <div class="login-prompt-actions">
+                            <a href="admin/login.php" class="btn btn-primary">Accedi</a>
+                            <a href="admin/register.php" class="btn btn-outline">Registrati</a>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
             
             <a href="shop.php" class="back-link">← Torna allo Shop</a>
@@ -133,6 +153,7 @@ require_once 'includes/header.php';
 <?php endif; ?>
 
 <script>
+<?php if ($is_logged_in): ?>
 document.querySelector('.add-to-cart-detail')?.addEventListener('click', function() {
     const id = this.dataset.id;
     const name = this.dataset.name;
@@ -153,6 +174,7 @@ document.querySelector('.add-to-cart-detail')?.addEventListener('click', functio
     setTimeout(() => { this.textContent = '🛒 Aggiungi al Carrello'; }, 1000);
     updateCartCount();
 });
+<?php endif; ?>
 
 function updateCartCount() {
     const cart = JSON.parse(localStorage.getItem('antiqua_cart')) || [];
