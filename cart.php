@@ -4,6 +4,21 @@
  * File: cart.php
  */
 
+// Avvia sessione se non già attiva
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Verifica se l'utente è loggato
+$is_logged_in = isset($_SESSION['user_id']);
+
+// Se NON è loggato, reindirizza al login
+if (!$is_logged_in) {
+    $_SESSION['redirect_after_login'] = 'cart.php';
+    header('Location: admin/login.php');
+    exit;
+}
+
 $page_title = 'Carrello - Antiqua Barbae';
 $page_description = 'Riepilogo dei prodotti nel tuo carrello.';
 
