@@ -1,7 +1,13 @@
 <?php
+/**
+ * ANTIQUA BARBAE - Login
+ * File: admin/login.php
+ */
+
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_once '../includes/config.php';
 
+// Se già loggato, reindirizza in base al ruolo
 if (isset($_SESSION['user_id'])) {
     header('Location: ' . ($_SESSION['role'] === 'owner' ? 'dashboard.php' : '../index.php'));
     exit;
@@ -24,10 +30,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['full_name'] = $user['full_name'];
+            $_SESSION['email'] = $user['email'];           // ← AGGIUNTO per checkout
             $_SESSION['role'] = $user['role'];
             $_SESSION['barberia_id'] = $user['barberia_id'];
             session_regenerate_id(true);
             
+            // Redirect dopo login (se proveniva da carrello/checkout)
+            if (isset($_SESSION['redirect_after_login'])) {
+                $redirect = $_SESSION['redirect_after_login'];
+                unset($_SESSION['redirect_after_login']);
+                header('Location: ../' . $redirect);
+                exit;
+            }
+            
+            // Altrimenti reindirizza in base al ruolo
             header('Location: ' . ($user['role'] === 'owner' ? 'dashboard.php' : '../index.php'));
             exit;
         } else {
