@@ -1,5 +1,5 @@
 /* ============================================================
-   ANTIQUA BARBAE - STYLE.CSS
+   ANTIQUA BARBAE - STYLE.CSS (VERSIONE FINALE)
    Design: Elegante, barberia vintage, responsive mobile-first
    ============================================================ */
 
@@ -54,7 +54,18 @@ h1, h2, h3, h4 { font-family: var(--font-secondary); font-weight: 700; line-heig
 .nav-list { display: flex; list-style: none; gap: 1.5rem; }
 .nav-link { text-decoration: none; color: var(--color-gray); font-weight: 500; transition: var(--transition); }
 .nav-link:hover, .nav-link.active { color: var(--color-primary); }
-.header-actions { display: flex; gap: 0.75rem; }
+.header-actions { display: flex; align-items: center; gap: 0.75rem; }
+
+/* User Welcome (nuovo) */
+.user-welcome {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--color-dark);
+    font-weight: 500;
+    margin-right: 0.5rem;
+    font-size: 0.95rem;
+}
 
 /* Buttons */
 .btn { display: inline-block; padding: 0.7rem 1.5rem; border-radius: var(--border-radius-sm); text-decoration: none; font-weight: 600; transition: var(--transition); cursor: pointer; border: none; font-size: 0.95rem; text-align: center; }
@@ -127,6 +138,26 @@ h1, h2, h3, h4 { font-family: var(--font-secondary); font-weight: 700; line-heig
 .category-list .count { font-size: 0.8rem; opacity: 0.7; }
 .empty-state { text-align: center; padding: 3rem; background: white; border-radius: var(--border-radius-md); }
 
+/* Login Reminder Widget (nuovo) */
+.login-reminder {
+    background: var(--color-light);
+    border: 2px solid var(--color-primary);
+    margin-top: 1.5rem;
+}
+.login-reminder .widget-title {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+}
+.login-reminder p {
+    margin-bottom: 1rem;
+    color: var(--color-dark);
+    font-size: 0.9rem;
+}
+.login-reminder .btn {
+    display: block;
+    text-align: center;
+}
+
 /* Product Detail */
 .product-detail-section { padding: var(--section-spacing) 0; }
 .breadcrumb-section { background: var(--color-light); padding: 1rem 0; border-bottom: 1px solid #e8d5c4; }
@@ -166,6 +197,27 @@ h1, h2, h3, h4 { font-family: var(--font-secondary); font-weight: 700; line-heig
 .back-link:hover { color: var(--color-primary); }
 .related-products { padding: var(--section-spacing) 0; background: var(--color-light); }
 
+/* Login Prompt (nuovo) */
+.login-prompt {
+    background: var(--color-light);
+    border: 2px solid var(--color-primary);
+    border-radius: var(--border-radius-md);
+    padding: 1.5rem;
+    text-align: center;
+    margin: 1rem 0;
+    width: 100%;
+}
+.login-prompt p {
+    margin-bottom: 1rem;
+    color: var(--color-dark);
+}
+.login-prompt-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
 /* Cart */
 .cart-section { padding: var(--section-spacing) 0; }
 .cart-table-wrapper { background: white; border-radius: var(--border-radius-md); padding: 1.5rem; box-shadow: var(--shadow-sm); overflow-x: auto; }
@@ -193,12 +245,15 @@ h1, h2, h3, h4 { font-family: var(--font-secondary); font-weight: 700; line-heig
 .checkout-form .form-label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
 .checkout-form .form-input { width: 100%; padding: 0.75rem; border: 2px solid #e8d5c4; border-radius: var(--border-radius-sm); font-size: 1rem; }
 .checkout-form .form-input:focus { outline: none; border-color: var(--color-primary); }
+.checkout-form .has-error .form-input { border-color: var(--color-error); }
+.checkout-form .form-error { color: var(--color-error); font-size: 0.85rem; margin-top: 0.25rem; display: block; }
 .checkout-summary { background: white; border-radius: var(--border-radius-md); padding: 2rem; box-shadow: var(--shadow-sm); height: fit-content; position: sticky; top: 100px; }
 .checkout-items { margin: 1.5rem 0; }
 .checkout-item { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0; }
 .checkout-total { display: flex; justify-content: space-between; font-size: 1.3rem; font-weight: 700; margin-top: 1rem; padding-top: 1rem; border-top: 2px solid #e8d5c4; }
 .alert-success { background: #E8F5E9; border: 1px solid var(--color-success); color: #1B5E20; padding: 2rem; border-radius: var(--border-radius-md); text-align: center; }
 .alert-success h2 { margin-bottom: 1rem; }
+.alert-error { background: #FFEBEE; border: 1px solid var(--color-error); color: #B71C1C; padding: 1rem; border-radius: var(--border-radius-sm); margin-bottom: 1.5rem; }
 
 /* Payment */
 .payment-section { padding: var(--section-spacing) 0; }
@@ -340,6 +395,7 @@ h1, h2, h3, h4 { font-family: var(--font-secondary); font-weight: 700; line-heig
     .site-title { font-size: 1.25rem; }
     .product-image { height: 180px; }
     .product-image img { max-height: 180px; }
+    .user-welcome { margin-right: 0; }
 }
 
 @media (max-width: 480px) {
@@ -352,4 +408,6 @@ h1, h2, h3, h4 { font-family: var(--font-secondary); font-weight: 700; line-heig
     .hero-image-container { height: 60vh; min-height: 350px; }
     .product-image { height: 200px; }
     .product-image img { max-height: 200px; }
+    .login-prompt-actions { flex-direction: column; }
+    .login-prompt-actions .btn { width: 100%; }
 }
